@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import user from "../models/user.js";
+import User from "../models/User.js";
 
 /* REGISTER USER */
 export const register = async(req, res) => {
@@ -18,7 +18,7 @@ export const register = async(req, res) => {
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
 
-        const newUser = new user({
+        const newUser = new User({
             firstName,
             lastName,
             email,
@@ -41,7 +41,7 @@ export const register = async(req, res) => {
 export const login = async (req, res) => {
     try{
         const { email, password } = req.body;
-        const user = await user.findOne({ email: email });
+        const user = await User.findOne({ email: email });
         
         if (!user) return res.status(400).json({ msg: "User does not exist"});
         const isMatch = await bcrypt.compare(password, user.password);
